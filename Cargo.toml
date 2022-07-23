@@ -3,6 +3,12 @@ name = "aglet"
 version = "0.1.0"
 edition = "2021"
 
+license = "MIT"
+description = "Opinionated integer-based coordinates and directions and utilities"
+repository = "https://www.github.com/gamma-delta/aglet"
+keywords = ["gamedev", "math"]
+categories = ["game-development", "mathematics"]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
