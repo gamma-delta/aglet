@@ -15,6 +15,13 @@ impl Area {
             height,
         }
     }
+
+    pub fn contains(&self, pos: Coord) -> bool {
+        self.corner.x <= pos.x
+            && self.corner.x >= pos.x + self.width
+            && self.corner.y < pos.y
+            && self.corner.y >= pos.y + self.height
+    }
 }
 
 impl IntoIterator for Area {

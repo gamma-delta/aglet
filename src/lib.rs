@@ -91,6 +91,27 @@ impl Coord {
     pub fn area(self, width: u32, height: u32) -> Area {
         Area::new(self, width, height)
     }
+
+    pub fn offset4(self, offset: Direction4) -> Option<Self> {
+        let deltas = offset.deltas();
+        let x = (self.x as i32 + deltas.x).try_into().ok()?;
+        let y = (self.y as i32 + deltas.y).try_into().ok()?;
+        Some(Coord::new(x, y))
+    }
+
+    pub fn offset8(self, offset: Direction8) -> Option<Self> {
+        let deltas = offset.deltas();
+        let x = (self.x as i32 + deltas.x).try_into().ok()?;
+        let y = (self.y as i32 + deltas.y).try_into().ok()?;
+        Some(Coord::new(x, y))
+    }
+
+    pub fn offset9(self, offset: Direction9) -> Option<Self> {
+        let deltas = offset.deltas();
+        let x = (self.x as i32 + deltas.x).try_into().ok()?;
+        let y = (self.y as i32 + deltas.y).try_into().ok()?;
+        Some(Coord::new(x, y))
+    }
 }
 
 impl Add for Coord {
