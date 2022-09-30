@@ -1,6 +1,6 @@
 use crate::{Coord, CoordVec};
 
-/// Iterates over coordinates on a line using Bresenham's algorith,.
+/// Iterates over coordinates on a line using Bresenham's algorithm.
 ///
 /// Implementation taken mostly from https://crates.io/crates/bresenham,
 /// with some new features.

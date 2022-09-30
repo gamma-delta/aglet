@@ -17,6 +17,7 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// Unsigned-int coordinates
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Coord {
     pub x: u32,
     pub y: u32,
@@ -202,7 +203,7 @@ impl Display for Coord {
 
 /// Signed-int coordinates
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CoordVec {
     pub x: i32,
     pub y: i32,

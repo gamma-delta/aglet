@@ -1,5 +1,7 @@
 use super::Coord;
 
+/// Like a `HashMap<Coord, T>` but faster. Each grid point might store something.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Grid<T> {
     width: u32,
     height: u32,

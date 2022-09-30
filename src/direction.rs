@@ -7,6 +7,7 @@ use bitflags::bitflags;
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Direction4 {
     North,
     East,
@@ -83,6 +84,7 @@ impl Direction4 {
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Direction8 {
     North,
     NorthEast,
@@ -169,6 +171,7 @@ impl From<Direction4> for Direction8 {
 
 /// Nine-way directions: 8 compass points plus center.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Direction9 {
     NorthWest,
     North,
@@ -268,6 +271,7 @@ impl From<Direction8> for Direction9 {
 /// 2-way rotations: clockwise or counterclockwise.
 /// These don't indicate any specific angle by themselves, only in relation to something.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Rotation {
     Clockwise,
     CounterClockwise,

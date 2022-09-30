@@ -1,6 +1,7 @@
 use super::Coord;
 
 #[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Area {
     pub corner: Coord,
     pub width: u32,

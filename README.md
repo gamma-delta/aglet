@@ -6,4 +6,4 @@ It adds opinionated integer-based coordinates and directions, along with some ot
 - Iterators over areas, edges of areas, and lines
 - `Grid<T>`, which is like a `HashMap<Coord, T>` but faster
 
-This crate is built alongside and for my W.I.P. roguelike [Foxfire](https://www.petra-k.at/foxfire).
+Also supports serde, under the default feature `serde`.
