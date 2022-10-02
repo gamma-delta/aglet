@@ -23,6 +23,13 @@ impl Area {
             && self.corner.y < pos.y
             && self.corner.y >= pos.y + self.height
     }
+
+    pub fn overlaps(&self, other: &Area) -> bool {
+        !(self.corner.x + self.width < other.corner.x
+            || other.corner.x + other.width < self.corner.x
+            || self.corner.y + self.height < other.corner.y
+            || other.corner.y + other.height < self.corner.y)
+    }
 }
 
 impl IntoIterator for Area {
