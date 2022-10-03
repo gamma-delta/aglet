@@ -25,10 +25,34 @@ impl Area {
     }
 
     pub fn overlaps(&self, other: &Area) -> bool {
-        !(self.corner.x + self.width < other.corner.x
-            || other.corner.x + other.width < self.corner.x
-            || self.corner.y + self.height < other.corner.y
-            || other.corner.y + other.height < self.corner.y)
+        !(self.x2() < other.x1()
+            || other.x2() < self.x1()
+            || self.y2() < other.y1()
+            || other.y2() < self.y1())
+    }
+
+    pub fn center(&self) -> Coord {
+        Coord::new(
+            self.corner.x + self.width / 2,
+            self.corner.y + self.height / 2,
+        )
+    }
+
+    /// Left-side X coordinate
+    pub fn x1(&self) -> u32 {
+        self.corner.x
+    }
+    /// Right-side X coordinate
+    pub fn x2(&self) -> u32 {
+        self.corner.x + self.width
+    }
+    /// Top Y coordinate
+    pub fn y1(&self) -> u32 {
+        self.corner.y
+    }
+    /// Bottom Y coordinate
+    pub fn y2(&self) -> u32 {
+        self.corner.y + self.height
     }
 }
 
