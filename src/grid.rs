@@ -30,9 +30,22 @@ impl<T> Grid<T> {
         self.spots[idx].as_mut()
     }
 
+    /// Returns the old value
     pub fn insert(&mut self, coord: Coord, val: T) -> Option<T> {
         let idx = self.idx(coord)?;
         self.spots[idx].replace(val)
+    }
+
+    pub fn get_or_insert_with<F: FnOnce() -> T>(&mut self, coord: Coord, fallback: F) -> &mut T {
+        // Workaround "get or insert" limitation in borrowck
+        if self.get(coord).is_some() {
+            return self.get_mut(coord).unwrap();
+        }
+        self.insert(coord, fallback());
+        self.get_mut(coord).unwrap()
+    }
+    pub fn get_or_insert(&mut self, coord: Coord, fallback: T) -> &mut T {
+        self.get_or_insert_with(coord, || fallback)
     }
 
     pub fn contains(&self, coord: Coord) -> bool {
