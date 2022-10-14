@@ -1,3 +1,5 @@
+use std::{iter::Enumerate, slice, vec};
+
 use super::Coord;
 
 /// Like a `HashMap<Coord, T>` but faster. Each grid point might store something.
@@ -63,36 +65,20 @@ impl<T> Grid<T> {
         self.height
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = (Coord, &T)> {
-        self.spots.iter().enumerate().filter_map(|(idx, spot)| {
-            spot.as_ref().map(|spot| {
-                (
-                    Coord::new(idx as u32 % self.width, idx as u32 / self.width),
-                    spot,
-                )
-            })
-        })
+    /// Iterate over all the (filled) slots in the grid.
+    pub fn iter(&self) -> GridIter<'_, T> {
+        GridIter {
+            inner: self.spots.iter().enumerate(),
+            width: self.width,
+        }
     }
 
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = (Coord, &mut T)> {
-        self.spots.iter_mut().enumerate().filter_map(|(idx, spot)| {
-            spot.as_mut().map(|spot| {
-                (
-                    Coord::new(idx as u32 % self.width, idx as u32 / self.width),
-                    spot,
-                )
-            })
-        })
-    }
-
-    pub fn into_iter(self) -> impl Iterator<Item = (Coord, T)> {
-        let width = self.width;
-        self.spots
-            .into_iter()
-            .enumerate()
-            .filter_map(move |(idx, spot)| {
-                spot.map(|spot| (Coord::new(idx as u32 % width, idx as u32 / width), spot))
-            })
+    /// Iterate mutably over all the (filled) slots in the grid.
+    pub fn iter_mut(&mut self) -> GridIterMut<'_, T> {
+        GridIterMut {
+            inner: self.spots.iter_mut().enumerate(),
+            width: self.width,
+        }
     }
 
     fn idx(&self, coord: Coord) -> Option<usize> {
@@ -101,5 +87,96 @@ impl<T> Grid<T> {
         } else {
             Some((self.width * coord.y + coord.x) as usize)
         }
+    }
+}
+
+impl<T> IntoIterator for Grid<T> {
+    type Item = (Coord, T);
+
+    type IntoIter = GridIntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        GridIntoIter {
+            inner: self.spots.into_iter().enumerate(),
+            width: self.width,
+        }
+    }
+}
+
+/// Borrowing iterator over the filled slots in a [`Grid`].
+pub struct GridIter<'a, T> {
+    inner: Enumerate<slice::Iter<'a, Option<T>>>,
+    width: u32,
+}
+
+impl<'a, T> Iterator for GridIter<'a, T> {
+    type Item = (Coord, &'a T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some((idx, slot)) = self.inner.next() {
+            let slot = match slot {
+                Some(it) => it,
+                None => continue,
+            };
+
+            return Some((
+                Coord::new(idx as u32 % self.width, idx as u32 / self.width),
+                slot,
+            ));
+        }
+        // We've exhausted the internal vec
+        None
+    }
+}
+
+/// Mutably borrowing iterator over the filled slots in a [`Grid`].
+pub struct GridIterMut<'a, T> {
+    inner: Enumerate<slice::IterMut<'a, Option<T>>>,
+    width: u32,
+}
+
+impl<'a, T> Iterator for GridIterMut<'a, T> {
+    type Item = (Coord, &'a mut T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some((idx, slot)) = self.inner.next() {
+            let slot = match slot {
+                Some(it) => it,
+                None => continue,
+            };
+
+            return Some((
+                Coord::new(idx as u32 % self.width, idx as u32 / self.width),
+                slot,
+            ));
+        }
+        // We've exhausted the internal vec
+        None
+    }
+}
+
+/// Owning iterator over the filled slots in a [`Grid`].
+pub struct GridIntoIter<T> {
+    inner: Enumerate<vec::IntoIter<Option<T>>>,
+    width: u32,
+}
+
+impl<T> Iterator for GridIntoIter<T> {
+    type Item = (Coord, T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some((idx, slot)) = self.inner.next() {
+            let slot = match slot {
+                Some(it) => it,
+                None => continue,
+            };
+
+            return Some((
+                Coord::new(idx as u32 % self.width, idx as u32 / self.width),
+                slot,
+            ));
+        }
+        // We've exhausted the internal vec
+        None
     }
 }
