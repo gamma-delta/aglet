@@ -1,11 +1,13 @@
 use super::CoordVec;
-use bitflags::bitflags;
+use enumflags2::{bitflags, BitFlags};
 
 /// Four-way directions.
 ///
 /// These start at North and increment clockwise,
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
+#[bitflags]
+#[repr(u8)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Direction4 {
@@ -35,7 +37,9 @@ impl Direction4 {
     /// Negative numbers go counter-clockwise.
     pub fn rotate_by(self, steps_clockwise: i32) -> Self {
         let idx = self as i32;
-        let new_idx = ((idx + steps_clockwise).rem_euclid(Self::DIRECTIONS.len() as i32)) as usize;
+        let new_idx = ((idx + steps_clockwise)
+            .rem_euclid(Self::DIRECTIONS.len() as i32))
+            as usize;
         Self::DIRECTIONS[new_idx]
     }
 
@@ -83,6 +87,8 @@ impl Direction4 {
 /// These start at North and increment counter-clockwise,
 /// so you can convert them to integers with `as` and use them
 /// in rotational calculations if you need.
+#[bitflags]
+#[repr(u8)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Direction8 {
@@ -120,7 +126,9 @@ impl Direction8 {
     /// Negative numbers go counter-clockwise.
     pub fn rotate_by(self, steps_clockwise: i32) -> Self {
         let idx = self as i32;
-        let new_idx = ((idx + steps_clockwise).rem_euclid(Self::DIRECTIONS.len() as i32)) as usize;
+        let new_idx = ((idx + steps_clockwise)
+            .rem_euclid(Self::DIRECTIONS.len() as i32))
+            as usize;
         Self::DIRECTIONS[new_idx]
     }
 
@@ -289,62 +297,5 @@ impl Rotation {
     }
 }
 
-bitflags! {
-    pub struct Direction4Set: u8 {
-        const NORTH = 0b0001;
-        const EAST = 0b0010;
-        const SOUTH = 0b0100;
-        const WEST = 0b1000;
-    }
-}
-
-impl Direction4Set {
-    pub fn has(&self, dir: Direction4) -> bool {
-        (self.bits & (1 << dir as u8)) != 0
-    }
-}
-
-impl From<Direction4> for Direction4Set {
-    fn from(dir: Direction4) -> Self {
-        match dir {
-            Direction4::North => Self::NORTH,
-            Direction4::East => Self::EAST,
-            Direction4::South => Self::SOUTH,
-            Direction4::West => Self::WEST,
-        }
-    }
-}
-
-bitflags! {
-    pub struct Direction8Set: u8 {
-        const NORTH = 0x01;
-        const NORTHEAST = 0x02;
-        const EAST = 0x04;
-        const SOUTHEAST = 0x08;
-        const SOUTH = 0x10;
-        const SOUTHWEST = 0x20;
-        const WEST = 0x40;
-        const NORTHWEST = 0x80;
-    }
-}
-
-impl Direction8Set {
-    pub fn has(&self, dir: Direction8) -> bool {
-        (self.bits & (1 << dir as u8)) != 0
-    }
-}
-
-impl From<Direction8> for Direction8Set {
-    fn from(dir: Direction8) -> Self {
-        match dir {
-            Direction8::North => Direction8Set::NORTH,
-            Direction8::NorthEast => Direction8Set::NORTHEAST,
-            Direction8::East => Direction8Set::EAST,
-            Direction8::SouthEast => Direction8Set::SOUTHEAST,
-            Direction8::South => Direction8Set::SOUTH,
-            Direction8::SouthWest => Direction8Set::SOUTHWEST,
-            Direction8::West => Direction8Set::WEST,
-            Direction8::NorthWest => Direction8Set::NORTHWEST,
-        }
-    }
-}
+pub type Direction4Set = BitFlags<Direction4>;
+pub type Direction8Set = BitFlags<Direction8>;

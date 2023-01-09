@@ -10,10 +10,14 @@ pub use direction::*;
 pub use grid::*;
 pub use lines::*;
 
-use std::convert::{TryFrom, TryInto};
-use std::fmt::Display;
-use std::num::TryFromIntError;
-use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
+pub use enumflags2::{BitFlag, BitFlags};
+
+use std::{
+    convert::{TryFrom, TryInto},
+    fmt::Display,
+    num::TryFromIntError,
+    ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign},
+};
 
 /// Unsigned-int coordinates
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
@@ -278,7 +282,8 @@ impl CoordVec {
             return Direction9::Center;
         }
         // there's gotta be a better way to do this
-        let angle = (-self.y as f32).atan2(self.x as f32) + std::f32::consts::PI;
+        let angle =
+            (-self.y as f32).atan2(self.x as f32) + std::f32::consts::PI;
         match angle / std::f32::consts::TAU * 16.0 {
             a if a < 1.0 => Direction9::East,
             a if a < 3.0 => Direction9::NorthEast,
