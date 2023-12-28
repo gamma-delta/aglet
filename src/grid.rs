@@ -1,5 +1,7 @@
 use std::{iter::Enumerate, slice, vec};
 
+use crate::Area;
+
 use super::Coord;
 
 /// Like a `HashMap<Coord, T>` but faster. Each grid point might store something.
@@ -96,6 +98,16 @@ impl<T> Grid<T> {
       inner: self.spots.iter_mut().enumerate(),
       width: self.width,
     }
+  }
+
+  /// Return whether the given coord even fits in the grid.
+  pub fn is_coord_valid(&self, coord: Coord) -> bool {
+    coord.x < self.width() && coord.y < self.height()
+  }
+
+  /// Return an area covering the whole grid (including empties).
+  pub fn area(&self) -> Area {
+    Area::new(Coord::ZERO, self.width(), self.height())
   }
 
   fn idx(&self, coord: Coord) -> Option<usize> {
